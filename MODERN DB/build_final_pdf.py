@@ -19,7 +19,9 @@ from reportlab.platypus import (
     PageBreak, KeepTogether, HRFlowable, Table, TableStyle
 )
 
-SCREENSHOTS_DIR = os.path.join(os.getcwd(), "screenshots")
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+SCREENSHOTS_DIR = os.path.join(SCRIPT_DIR, "screenshots")
+
 
 
 def get_scaled_image(filename, max_w=540, max_h=340):
@@ -259,6 +261,6 @@ def package_zip(zip_name):
 
 
 if __name__ == "__main__":
-    pdf_out = os.path.join(os.getcwd(), "finaloutput.pdf")
+    pdf_out = os.path.join(SCRIPT_DIR, "finaloutput.pdf")
     generate_pdf(pdf_out)
-    package_zip("2024EB02528_MDB_SGA1.zip")
+    package_zip(os.path.join(SCRIPT_DIR, "2024EB02528_MDB_SGA1.zip"))
