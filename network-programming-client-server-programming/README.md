@@ -47,6 +47,4 @@ gcc -Wall -Wextra -O2 http_client.c -o client
 
 ## Deliverables
 - `http_client.c`: Source code with student credentials
-- `2024EB02528_UJJWAL_JAIN_NP_Assignment.docx`: Formatted report with design details, function specifications, error matrix, and 8 test case runs
 - `2024EB02528_UJJWAL_JAIN_NP_Assignment.pdf`: 10-page publication-quality PDF report
-- `2024EB02528_UJJWAL_JAIN_NP_Assignment.zip`: Submission archive ready for upload
