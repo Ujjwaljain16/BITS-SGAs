@@ -2,7 +2,6 @@
 
 **Student ID:** 2024EB02528  
 **Student Name:** UJJWAL JAIN  
-**Programme:** Work Integrated Learning Programmes (WILP)
 
 ---
 
@@ -12,4 +11,7 @@
    - Scripts, outputs, and report
 2. [**Software Development Practices**](./software-development-practices/)
    - Staff Graded Assignment 1 (FoodExpress OOAD / System Design)
-   - Requirements, Use Case, PlantUML diagrams (.puml & .png), Word report (.docx), PDF (.pdf), and submission package (.zip)
+   - Requirements, Use Case, PlantUML diagrams (.puml & .png), Word report (.docx), PDF (.pdf)
+3. [**Network Programming: Client-Server Programming**](./network-programming-client-server-programming/)
+   - Simple HTTP Client in C using POSIX Sockets
+   - Source code, Makefile, and execution documentation
