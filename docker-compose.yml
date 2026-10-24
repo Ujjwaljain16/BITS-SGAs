@@ -1,0 +1,22 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: bits_mongo
+    ports:
+      - "27017:27017"
+
+  neo4j:
+    image: neo4j:5
+    container_name: bits_neo4j
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      - NEO4J_AUTH=neo4j/password123
+
+  dynamodb:
+    image: amazon/dynamodb-local:latest
+    container_name: bits_dynamodb
+    ports:
+      - "8000:8000"
+    command: "-jar DynamoDBLocal.jar -inMemory -sharedDb"
