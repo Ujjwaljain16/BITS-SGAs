@@ -1,0 +1,98 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam roundCorner 6
+skinparam linetype ortho
+
+title Class Diagram: FoodExpress System
+
+class Customer {
+    - customerId: String
+    - name: String
+    - email: String
+    - phone: String
+    - deliveryAddress: String
+    + browseRestaurants(query: String): List<Restaurant>
+    + addToCart(item: FoodItem, quantity: int): void
+    + placeOrder(cart: List<OrderItem>): Order
+    + trackDelivery(orderId: String): String
+}
+
+class Restaurant {
+    - restaurantId: String
+    - name: String
+    - address: String
+    - isOpen: boolean
+    - rating: double
+    + viewOrders(): List<Order>
+    + acceptOrder(orderId: String): boolean
+    + rejectOrder(orderId: String, reason: String): boolean
+    + updateMenu(menu: Menu): void
+}
+
+class Menu {
+    - menuId: String
+    - category: String
+    - lastUpdated: Date
+    + getItems(): List<FoodItem>
+    + addItem(item: FoodItem): void
+    + removeItem(itemId: String): void
+}
+
+class FoodItem {
+    - itemId: String
+    - name: String
+    - price: double
+    - description: String
+    - isAvailable: boolean
+    + updatePrice(newPrice: double): void
+    + toggleAvailability(): void
+}
+
+class Order {
+    - orderId: String
+    - orderDate: Date
+    - totalAmount: double
+    - status: String
+    + calculateTotal(): double
+    + updateStatus(newStatus: String): void
+    + cancelOrder(): boolean
+}
+
+class OrderItem {
+    - quantity: int
+    - priceAtPurchase: double
+    - specialNotes: String
+    + getSubtotal(): double
+}
+
+class Payment {
+    - paymentId: String
+    - amount: double
+    - paymentMethod: String
+    - paymentStatus: String
+    - transactionRef: String
+    + processPayment(): boolean
+    + refundPayment(): boolean
+}
+
+class DeliveryPartner {
+    - partnerId: String
+    - name: String
+    - phone: String
+    - vehicleNumber: String
+    - isAvailable: boolean
+    + acceptDelivery(orderId: String): boolean
+    + updateLiveLocation(lat: double, lng: double): void
+    + confirmDelivery(orderId: String): boolean
+}
+
+Customer "1" --> "0..*" Order : places
+Restaurant "1" *-- "1" Menu : has
+Menu "1" *-- "1..*" FoodItem : contains
+Order "1" *-- "1..*" OrderItem : consists of
+OrderItem "1" --> "1" FoodItem : refers to
+Order "1" --> "1" Payment : paid through
+Restaurant "1" --> "0..*" Order : prepares
+Order "0..*" --> "0..1" DeliveryPartner : delivered by
+
+@enduml

@@ -1,0 +1,72 @@
+@startuml
+skinparam style strictuml
+skinparam sequenceMessageAlign center
+skinparam roundcorner 5
+skinparam BoxPadding 10
+
+title Sequence Diagram: Placing a Food Order (FoodExpress)
+
+actor Customer as cust
+participant "Mobile App / Web UI" as ui
+participant "Order Controller" as ordCtrl
+participant "Payment Service" as paySvc
+participant "Restaurant Service" as restSvc
+participant "Notification Service" as notifSvc
+
+autonumber
+
+cust -> ui : Click "Checkout"
+activate ui
+ui -> ordCtrl : createOrder(cartItems, deliveryAddress)
+activate ordCtrl
+
+ordCtrl -> ordCtrl : validateCartAndCalculateTotal()
+ordCtrl -> paySvc : initiatePayment(orderId, amount)
+activate paySvc
+paySvc --> ordCtrl : paymentGatewayUrl
+ordCtrl --> ui : redirectUrl
+ui --> cust : Display Payment Gateway
+
+cust -> paySvc : submitPaymentDetails(paymentMethod)
+paySvc -> paySvc : processTransaction()
+
+alt Payment Successful
+    paySvc --> ordCtrl : paymentSuccess(transactionRef)
+    ordCtrl -> restSvc : sendOrderNotification(orderId, orderDetails)
+    activate restSvc
+    restSvc --> ordCtrl : orderReceivedAck()
+    
+    restSvc -> restSvc : checkKitchenCapacity()
+    
+    alt Restaurant Accepts Order
+        restSvc --> ordCtrl : orderAccepted(prepTime)
+        deactivate restSvc
+        ordCtrl -> ordCtrl : updateStatus("Confirmed")
+        ordCtrl -> notifSvc : notifyOrderConfirmation(orderId, eta)
+        activate notifSvc
+        notifSvc --> cust : Push Notification: "Order Confirmed"
+        deactivate notifSvc
+        ordCtrl --> ui : showConfirmation(orderId, eta)
+        ui --> cust : Display Order Confirmation Screen
+    else Restaurant Rejects Order
+        restSvc --> ordCtrl : orderRejected(reason)
+        ordCtrl -> paySvc : triggerRefund(orderId, amount)
+        paySvc --> ordCtrl : refundInitiated()
+        ordCtrl -> ordCtrl : updateStatus("Cancelled")
+        ordCtrl -> notifSvc : notifyCancellation(orderId, reason)
+        notifSvc --> cust : Notification: "Order Rejected. Refund Initiated."
+        ordCtrl --> ui : showRejection(reason)
+        ui --> cust : Display Cancellation and Refund Notice
+    end
+
+else Payment Failed
+    paySvc --> ordCtrl : paymentFailed(errorCode)
+    deactivate paySvc
+    ordCtrl -> ordCtrl : updateStatus("Payment Failed")
+    ordCtrl --> ui : paymentError(retryOptions)
+    deactivate ordCtrl
+    ui --> cust : Display "Payment Failed - Please Retry"
+    deactivate ui
+end
+
+@enduml

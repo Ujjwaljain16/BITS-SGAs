@@ -1,0 +1,27 @@
+@startuml
+skinparam stateFontSize 12
+skinparam stateAttributeFontSize 10
+skinparam roundCorner 8
+
+title State Machine Diagram: Order Lifecycle (FoodExpress)
+
+[*] --> Created : Items added to cart & checkout clicked
+
+Created --> Payment_Pending : Customer initiates payment
+
+Payment_Pending --> Confirmed : Payment verified & Restaurant accepts
+Payment_Pending --> Cancelled : Payment declined / User timeout
+
+Confirmed --> Preparing : Kitchen begins food preparation
+Confirmed --> Cancelled : Restaurant rejects order (full refund initiated)
+
+Preparing --> Out_for_Delivery : Food packed & handed to Delivery Partner
+
+Out_for_Delivery --> Delivered : Customer receives package & confirms delivery
+Out_for_Delivery --> Delivery_Failed : Customer unreachable / address incorrect
+
+Delivered --> [*]
+Cancelled --> [*]
+Delivery_Failed --> [*]
+
+@enduml

@@ -1,0 +1,84 @@
+@startuml
+skinparam activityFontSize 12
+skinparam activityDiamondFontSize 11
+skinparam defaultTextAlignment center
+
+title Activity Diagram: Complete Food Ordering Workflow (FoodExpress)
+
+|Customer|
+start
+:Browse restaurants and cuisines;
+:Select restaurant;
+:Select items from menu and add to cart;
+:Proceed to checkout and select delivery address;
+:Select payment method;
+
+|FoodExpress System|
+:Generate order invoice;
+:Process payment with payment gateway;
+
+if (Payment successful?) then (Yes)
+    :Update order state to "Payment Received";
+    :Dispatch order details to restaurant;
+    
+    |Restaurant|
+    :Review incoming order;
+    if (Restaurant accepts orders?) then (Yes)
+        :Accept order and set estimated prep time;
+        :Prepare food in kitchen;
+        :Pack items and mark order "Ready for Pickup";
+        
+        |FoodExpress System|
+        :Assign nearby Delivery Partner;
+        :Notify Delivery Partner for pickup;
+        
+        |Delivery Partner|
+        :Accept delivery task;
+        :Navigate to restaurant;
+        :Pickup food package;
+        :Confirm pickup in app;
+        
+        |FoodExpress System|
+        :Update status to "Out for Delivery";
+        :Send live tracking link to Customer;
+        
+        |Delivery Partner|
+        :Navigate to Customer address;
+        :Attempt delivery at doorstep;
+        
+        if (Order delivered?) then (Yes)
+            :Mark order as "Delivered";
+            
+            |FoodExpress System|
+            :Record successful delivery;
+            :Send delivery confirmation;
+            
+            |Customer|
+            :Receive food;
+            :Provide rating and review;
+            stop
+        else (No)
+            |FoodExpress System|
+            :Trigger customer support escalation;
+            :Coordinate delivery retry or dispute resolution;
+            stop
+        endif
+        
+    else (No)
+        |FoodExpress System|
+        :Initiate automatic full refund to customer;
+        :Update order status to "Cancelled";
+        
+        |Customer|
+        :Receive order rejection alert and refund notice;
+        stop
+    endif
+    
+else (No)
+    |Customer|
+    :Display payment failure message;
+    :Prompt user to retry or change payment method;
+    stop
+endif
+
+@enduml
